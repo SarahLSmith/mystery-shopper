@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  MysteryShopper S3 Cloudformation example for AWS week in the Data Engineering Software Academy
+
+Parameters:
+  YourName:
+    Type: String
+    Description: Enter your name in format 'first-last' to customise the way your resources are named
+    Default: rory-gilmore
+
+Resources:
+  # TODO add ShopperRawDataBucket
+  ShopperRawDataBucket:
+    Type: AWS::S3::Bucket 
+    Properties: 
+      BucketName: !Sub '${YourName}-shopper-raw-data'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      Tags: 
+        - Key: Name 
+          Value: !Sub '${YourName}-shopper-raw-data'
+  # TODO Add ShopperRawDataBucketPolicy
+  ShopperRawDataBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ShopperRawDataBucket
+      PolicyDocument:
+        Statement:
+          - Sid: EnforceHTTPS
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:*"
+            Resource:
+              - !Sub "arn:aws:s3:::${YourName}-shopper-raw-data"
+              - !Sub "arn:aws:s3:::${YourName}-shopper-raw-data/*"
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
