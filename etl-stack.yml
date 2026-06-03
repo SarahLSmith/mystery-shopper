@@ -8,10 +8,17 @@ Parameters:
     Description: Enter your name in format 'first-last' to customise the way your resources are named
     Default: rory-gilmore
 
+#TODO: Add NetworkStackName
+
 Resources:
-  # TODO add ShopperRawDataBucket
+
+  # TODO Add EtlLambdaFunction:
+
   ShopperRawDataBucket:
-    Type: AWS::S3::Bucket 
+    Type: AWS::S3::Bucket
+
+    #TODO DependsOn
+ 
     Properties: 
       BucketName: !Sub '${YourName}-shopper-raw-data'
       PublicAccessBlockConfiguration:
@@ -19,10 +26,13 @@ Resources:
         BlockPublicPolicy: True
         IgnorePublicAcls: True
         RestrictPublicBuckets: True
+        
+        #TODO Add NotificationCOnfiguration: # triggers the lambda when a file is put in 
       Tags: 
         - Key: Name 
           Value: !Sub '${YourName}-shopper-raw-data'
-  # TODO Add ShopperRawDataBucketPolicy
+
+  # TODO Add ShopperRawDataBucketPermission: # allow the triggered lambda to read from the bucket
   ShopperRawDataBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
