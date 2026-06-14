@@ -8,6 +8,11 @@ Parameters:
     Description: Enter your name in format 'first-last' to customise the way your resources are named
     Default: rory-gilmore
 
+  NetworkStackName:
+    Type: String
+    Default: project-networking
+    Description: Network stack with VPC containing Redshift instance
+
 #TODO: Add NetworkStackName
 
 Resources:
