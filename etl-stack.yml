@@ -40,8 +40,10 @@ Resources:
   ShopperRawDataBucket:
     Type: AWS::S3::Bucket
 
-    #TODO DependsOn
- 
+    DependsOn:
+      - ShopperRawDataBucketPremission
+      - EtlLambdaFunction
+    
     Properties: 
       BucketName: !Sub '${YourName}-shopper-raw-data'
       PublicAccessBlockConfiguration:
@@ -50,7 +52,10 @@ Resources:
         IgnorePublicAcls: True
         RestrictPublicBuckets: True
         
-        #TODO Add NotificationCOnfiguration: # triggers the lambda when a file is put in 
+        NotificationConfiguration:
+          LambdaConfigurations:
+            - Event:s3:ObjectCreated:*
+              Function: !GetAtt EtlLambdaFunction.Arn  
       Tags: 
         - Key: Name 
           Value: !Sub '${YourName}-shopper-raw-data'
