@@ -60,7 +60,14 @@ Resources:
         - Key: Name 
           Value: !Sub '${YourName}-shopper-raw-data'
 
-  # TODO Add ShopperRawDataBucketPermission: # allow the triggered lambda to read from the bucket
+  ShopperRawDataBucketPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref EtleLambdaFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !Sub 'arn:aws:s3:::${YourName}-shopper-raw-data'
+
   ShopperRawDataBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
