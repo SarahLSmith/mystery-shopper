@@ -13,11 +13,29 @@ Parameters:
     Default: project-networking
     Description: Network stack with VPC containing Redshift instance
 
-#TODO: Add NetworkStackName
-
 Resources:
 
-  # TODO Add EtlLambdaFunction:
+  EtlLambdaFunction:
+    Type: AWS::Lambda::Function
+
+    Properties:
+      FunctionName: !Sub '${YourName}-shopper-etl-lambda'
+      Runtime: python3.12
+      Handler: mystery_shop_etl_lambda.lambda_handler # file_name.function_name
+      Role: !Sub 'arn@aws:iam::${AWS::AccountID}:role/lambda-execution-role' # security rule
+      Timeout: 30 # max running time in seconds (make as low as possible)
+      ReservedConcurrentExecutions: 10 # how many can run at once
+      Code: ./src # use this folder for the zip of lambda code
+      VpcConfig: # use the same networking as RedShift
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              !Sub '${NetworkStackName}-VPCSGID'
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub '${NetworkStackName}-PrivateSubnet0ID'
+      Tags:
+        - Key: Name
+          Value: !Sub '${YourName}-shopper-etl-lambda'
 
   ShopperRawDataBucket:
     Type: AWS::S3::Bucket
